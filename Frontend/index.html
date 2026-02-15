@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Management System</h1>
+        
+        <!-- Add/Update User Form -->
+        <div class="form-section">
+            <h2 id="form-title">Add New User</h2>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="userId">User ID:</label>
+                    <input type="number" id="userId" required>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Name:</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" id="submit-btn">Add User</button>
+                    <button type="button" id="cancel-btn" class="cancel-btn" style="display: none;">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Users List -->
+        <div class="users-section">
+            <div class="section-header">
+                <h2>All Users</h2>
+                <button id="refresh-btn" class="refresh-btn">Refresh</button>
+            </div>
+            <div id="message" class="message"></div>
+            <table id="users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <!-- Users will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
