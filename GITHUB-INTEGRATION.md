@@ -18,26 +18,25 @@ Kubernetes Cluster
 
 ## 1. Setup GitHub Repository
 
-### Create a new repository on GitHub:
+### Your GitHub Repository:
 ```bash
-# Go to https://github.com/new
-# Create a repository named: user-management-kubernetes
+Repository: https://github.com/RashmikaHarshamal/Kubernetes-deployement.git
+Status: ✓ Already created and pushed
 ```
 
-### Push your code to GitHub:
+### Push updates to GitHub:
 ```bash
-# Initialize git (if not already)
+# After making changes
 cd "E:/Projects/Kubernetes Deployement"
-git init
 
-# Add all files
+# Add changes
 git add .
 
-# Create .gitignore first (see below)
-git commit -m "Initial commit: User Management System with Docker and K8s"
+# Commit
+git commit -m "Your commit message"
 
-# Add your GitHub repository
-git remote add origin https://github.com/YOUR-USERNAME/user-management-kubernetes.git
+# Push to GitHub
+git push origin main
 
 # Push to GitHub
 git branch -M main
@@ -62,7 +61,7 @@ git push -u origin main
 4. In Pipeline section:
    - Definition: "Pipeline script from SCM"
    - SCM: Git
-   - Repository URL: https://github.com/YOUR-USERNAME/user-management-kubernetes.git
+   - Repository URL: https://github.com/RashmikaHarshamal/Kubernetes-deployement.git
    - Credentials: Add your GitHub credentials
    - Branch: */main
    - Script Path: Jenkinsfile
@@ -145,7 +144,7 @@ git push origin main
 
 Your repository should look like:
 ```
-user-management-kubernetes/
+Kubernetes-deployement/
 ├── .gitignore
 ├── README.md
 ├── DEPLOYMENT-GUIDE.md
@@ -248,12 +247,10 @@ kubectl get ingress
 ## Quick Setup Commands
 
 ```bash
-# Initialize and push to GitHub
-git init
+# Push updates to GitHub
 git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR-USERNAME/user-management-kubernetes.git
-git push -u origin main
+git commit -m "Update description"
+git push origin main
 
 # Create ECR repositories
 aws ecr create-repository --repository-name backend --region ap-south-1

@@ -149,7 +149,7 @@ kubectl get ingress app-ingress
    - New Item → Pipeline
    - Pipeline from SCM
    - SCM: Git
-   - Repository: https://github.com/YOUR-USERNAME/user-management-kubernetes.git
+   - Repository: https://github.com/RashmikaHarshamal/Kubernetes-deployement.git
    - Script Path: Jenkinsfile
    ```
 
@@ -277,7 +277,9 @@ This project is open source and available under the MIT License.
 
 ## 👤 Author
 
-Your Name - [@yourhandle](https://github.com/yourhandle)
+Rashmika Harshamal - [@RashmikaHarshamal](https://github.com/RashmikaHarshamal)
+
+**Repository**: [Kubernetes-deployement](https://github.com/RashmikaHarshamal/Kubernetes-deployement)
 
 ## 🙏 Acknowledgments
 
