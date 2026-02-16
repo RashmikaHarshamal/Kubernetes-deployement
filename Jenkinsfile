@@ -1,30 +1,22 @@
-    pipeline {
+pipeline {
     agent any
     
     environment {
-        // Docker registry configuration - UPDATE THESE
-        DOCKER_REGISTRY = '804329959270.dkr.ecr.ap-south-1.amazonaws.com'
-        DOCKER_CREDENTIALS_ID = 'aws-ecr-credentials'
-        AWS_REGION = 'ap-south-1'
+        // Docker Hub credentials (configure in Jenkins)
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         
         // Image names
-        BACKEND_IMAGE = "${DOCKER_REGISTRY}/backend"
-        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/frontend"
+        BACKEND_IMAGE = "${DOCKER_REGISTRY}/your-username/user-backend"
+        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/your-username/user-frontend"
         
-        // Version tag
-        IMAGE_TAG = "${env.BUILD_NUMBER}"
-    }
-    
-    tools {
-        maven 'Maven-3.9'
-        nodejs 'NodeJS-20'
-        jdk 'JDK-17'
+        // Build version
+        BUILD_VERSION = "${BUILD_NUMBER}"
     }
     
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out code...'
                 checkout scm
             }
         }
@@ -32,31 +24,13 @@
         stage('Build Backend') {
             steps {
                 dir('Backend') {
-                    echo 'Building Spring Boot application...'
-                    sh 'mvn clean compile'
-                }
-            }
-        }
-        
-        stage('Test Backend') {
-            steps {
-                dir('Backend') {
-                    echo 'Running backend tests...'
-                    sh 'mvn test'
-                }
-            }
-            post {
-                always {
-                    junit 'Backend/target/surefire-reports/*.xml'
-                }
-            }
-        }
-        
-        stage('Package Backend') {
-            steps {
-                dir('Backend') {
-                    echo 'Packaging backend application...'
-                    sh 'mvn package -DskipTests'
+                    script {
+                        echo 'Building Backend Docker Image...'
+                        sh """
+                            docker build -t ${BACKEND_IMAGE}:${BUILD_VERSION} .
+                            docker tag ${BACKEND_IMAGE}:${BUILD_VERSION} ${BACKEND_IMAGE}:latest
+                        """
+                    }
                 }
             }
         }
@@ -64,80 +38,57 @@
         stage('Build Frontend') {
             steps {
                 dir('Frontend') {
-                    echo 'Installing frontend dependencies...'
-                    sh 'npm install'
-                    echo 'Building frontend application...'
-                    sh 'npm run build'
-                }
-            }
-        }
-        
-        stage('Build Docker Images') {
-            parallel {
-                stage('Build Backend Image') {
-                    steps {
-                        dir('Backend') {
-                            script {
-                                echo 'Building backend Docker image...'
-                                docker.build("${BACKEND_IMAGE}:${IMAGE_TAG}")
-                                docker.build("${BACKEND_IMAGE}:latest")
-                            }
-                        }
-                    }
-                }
-                
-                stage('Build Frontend Image') {
-                    steps {
-                        dir('Frontend') {
-                            script {
-                                echo 'Building frontend Docker image...'
-                                docker.build("${FRONTEND_IMAGE}:${IMAGE_TAG}")
-                                docker.build("${FRONTEND_IMAGE}:latest")
-                            }
-                        }
+                    script {
+                        echo 'Building Frontend Docker Image...'
+                        sh """
+                            docker build -t ${FRONTEND_IMAGE}:${BUILD_VERSION} .
+                            docker tag ${FRONTEND_IMAGE}:${BUILD_VERSION} ${FRONTEND_IMAGE}:latest
+                        """
                     }
                 }
             }
         }
         
-        stage('Push Docker Images') {
-            when {
-                branch 'main'
+        stage('Test Backend') {
+            steps {
+                dir('Backend') {
+                    script {
+                        echo 'Running Backend Tests...'
+                        sh './mvnw test'
+                    }
+                }
             }
+        }
+        
+        stage('Push Images') {
             steps {
                 script {
+                    echo 'Pushing Docker Images to Registry...'
                     docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
-                        echo 'Pushing backend image...'
-                        docker.image("${BACKEND_IMAGE}:${IMAGE_TAG}").push()
-                        docker.image("${BACKEND_IMAGE}:latest").push()
-                        
-                        echo 'Pushing frontend image...'
-                        docker.image("${FRONTEND_IMAGE}:${IMAGE_TAG}").push()
-                        docker.image("${FRONTEND_IMAGE}:latest").push()
+                        sh """
+                            docker push ${BACKEND_IMAGE}:${BUILD_VERSION}
+                            docker push ${BACKEND_IMAGE}:latest
+                            docker push ${FRONTEND_IMAGE}:${BUILD_VERSION}
+                            docker push ${FRONTEND_IMAGE}:latest
+                        """
                     }
                 }
             }
         }
         
-        stage('Deploy to Development') {
-            when {
-                branch 'develop'
-            }
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to development environment...'
-                sh 'docker-compose -f docker-compose.yml up -d'
-            }
-        }
-        
-        stage('Deploy to Production') {
-            when {
-                branch 'main'
-            }
-            steps {
-                input message: 'Deploy to Production?', ok: 'Deploy'
-                echo 'Deploying to production environment...'
-                // Add your production deployment commands here
-                // sh 'kubectl apply -f k8s/'
+                script {
+                    echo 'Deploying to Kubernetes...'
+                    // Update this section with your Kubernetes deployment commands
+                    sh """
+                        # kubectl set image deployment/backend backend=${BACKEND_IMAGE}:${BUILD_VERSION}
+                        # kubectl set image deployment/frontend frontend=${FRONTEND_IMAGE}:${BUILD_VERSION}
+                        # kubectl rollout status deployment/backend
+                        # kubectl rollout status deployment/frontend
+                        echo "Kubernetes deployment commands are commented out. Configure as needed."
+                    """
+                }
             }
         }
     }
@@ -145,17 +96,17 @@
     post {
         success {
             echo 'Pipeline completed successfully!'
-            // Add notifications (email, Slack, etc.)
+            // Add notifications (e.g., Slack, email)
         }
-        
         failure {
             echo 'Pipeline failed!'
             // Add failure notifications
         }
-        
         always {
-            echo 'Cleaning up workspace...'
-            cleanWs()
+            // Clean up
+            sh """
+                docker image prune -f
+            """
         }
     }
 }

@@ -1,37 +1,69 @@
-# Google Cloud SDK (already in workspace)
-google-cloud-sdk/
-
-# Target directories
-Backend/target/
-Frontend/dist/
-Frontend/node_modules/
-
-# IDE files
+# IDE
 .idea/
 .vscode/
 *.iml
 *.swp
 *.swo
+*~
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backend - Maven
+Backend/target/
+Backend/.mvn/
+Backend/pom.xml.tag
+Backend/pom.xml.releaseBackup
+Backend/pom.xml.versionsBackup
+Backend/pom.xml.next
+Backend/release.properties
+Backend/dependency-reduced-pom.xml
+Backend/buildNumber.properties
+
+# Frontend - Node
+Frontend/node_modules/
+Frontend/dist/
+Frontend/build/
+Frontend/.vite/
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+Frontend/pnpm-debug.log*
+
+# Environment variables
+*.env
+.env.local
+.env.*.local
 
 # Logs
 *.log
 logs/
 
-# Environment files
-.env
-.env.local
+# Test coverage
+coverage/
+*.lcov
 
-# Database files
-*.db
+# Kubernetes secrets (do not commit sensitive data)
+**/*-secret.yaml
+**/secrets/
 
-# Maven wrapper jar
-.mvn/wrapper/maven-wrapper.jar
+# Build artifacts
+*.jar
+*.war
+*.ear
+*.class
 
 # Temporary files
 *.tmp
+*.temp
 *.bak
-*~
+*.cache
+
+# Docker
+docker-compose.override.yml
+
+# Database volumes
+mysql-data/

@@ -6,10 +6,8 @@ services:
     image: mysql:8.0
     container_name: user-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: userdb
-      MYSQL_USER: userapp
-      MYSQL_PASSWORD: userpassword
+      MYSQL_ROOT_PASSWORD: Rush@2001780
+      MYSQL_DATABASE: salesdb
     ports:
       - "3306:3306"
     volumes:
@@ -29,11 +27,11 @@ services:
       dockerfile: Dockerfile
     container_name: user-backend
     ports:
-      - "8082:8080"
+      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
-      SPRING_DATASOURCE_USERNAME: userapp
-      SPRING_DATASOURCE_PASSWORD: userpassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/salesdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Rush@2001780
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
     depends_on:
@@ -41,7 +39,7 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    restart: unless-stopped
+    restart: on-failure
 
   # Frontend Vite Application
   frontend:

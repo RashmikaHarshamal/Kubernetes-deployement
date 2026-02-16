@@ -1,17 +1,29 @@
-// API Base URL - Update this if your backend runs on a different port
-// For local development: http://localhost:8080/api/v3
-// For Docker Compose: http://backend:8080/api/v3
-// For Kubernetes with Ingress: /api/v3 (same domain)
-const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8080/api/v3'
-    : '/api/v3';
+// API Base URL - Auto-detects environment
+// Priority: 1) Environment variable, 2) Same origin (production), 3) localhost (dev/docker)
+const API_BASE_URL = (() => {
+    // For production builds, this will be replaced with actual value
+    const envApiUrl = '__VITE_API_URL__';
+    
+    // If environment variable is set and not the placeholder
+    if (envApiUrl && envApiUrl !== '__VITE_API_URL__') {
+        return envApiUrl;
+    }
+    
+    // For local development and Docker Compose (both use localhost from browser)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:8080/api/v3';
+    }
+    
+    // For production/Kubernetes - use same origin with api path
+    return '/api/v3';
+})();
 
 // DOM Elements
 const userForm = document.getElementById('user-form');
 const userIdInput = document.getElementById('userId');
 const userNameInput = document.getElementById('userName');
 const submitBtn = document.getElementById('submit-btn');
-const cancelBtn = document.getElementById('cancel-btn');1
+const cancelBtn = document.getElementById('cancel-btn');
 const formTitle = document.getElementById('form-title');
 const usersTbody = document.getElementById('users-tbody');
 const messageDiv = document.getElementById('message');
