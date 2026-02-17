@@ -1,0 +1,18 @@
+{
+    "repositories": [
+        {
+            "repositoryArn": "arn:aws:ecr:ap-south-1:804329959270:repository/backend",
+            "registryId": "804329959270",
+            "repositoryName": "backend",
+            "repositoryUri": "804329959270.dkr.ecr.ap-south-1.amazonaws.com/backend",
+            "createdAt": "2026-02-15T13:41:26.568000+05:30",
+            "imageTagMutability": "MUTABLE",
+            "imageScanningConfiguration": {
+                "scanOnPush": false
+            },
+            "encryptionConfiguration": {
+                "encryptionType": "AES256"
+            }
+        }
+    ]
+}

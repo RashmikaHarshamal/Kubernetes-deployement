@@ -7,8 +7,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         
         // Image names
-        BACKEND_IMAGE = "${DOCKER_REGISTRY}/your-username/user-backend"
-        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/your-username/user-frontend"
+        BACKEND_IMAGE = "${DOCKER_REGISTRY}/rashmikaharshamal/backend"
+        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/rashmikaharshamal/frontend"
         
         // Build version
         BUILD_VERSION = "${BUILD_NUMBER}"
